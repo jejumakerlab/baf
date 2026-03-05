@@ -1,8 +1,10 @@
 "use client";
 
-import { useState, useRef, useCallback, type DragEvent, type ChangeEvent } from "react";
+import { useState, useRef, useCallback, lazy, Suspense, type DragEvent, type ChangeEvent } from "react";
 
-interface TransformResult {
+const ThreeViewer = lazy(() => import("./ThreeViewer"));
+
+export interface TransformResult {
   detectedObject: string;
   brailleText: string;
   modelUrl: string;
@@ -395,6 +397,40 @@ export default function ImageUploader() {
               다른 이미지 변환하기
             </button>
           </div>
+        </div>
+      )}
+
+      {status === "success" && result && (
+        <div className="mt-8">
+          <h3
+            className="mb-4 text-center text-lg font-bold sm:text-xl"
+            style={{ color: "var(--text-primary)" }}
+          >
+            3D 촉각 교구 미리보기
+          </h3>
+          <Suspense
+            fallback={
+              <div
+                className="flex h-[320px] items-center justify-center rounded-2xl border sm:h-[420px]"
+                style={{ borderColor: "var(--border)", backgroundColor: "var(--bg-card)" }}
+                role="status"
+              >
+                <div className="text-center">
+                  <div className="mb-3 flex justify-center" aria-hidden="true">
+                    <Spinner />
+                  </div>
+                  <p className="text-sm" style={{ color: "var(--text-muted)" }}>
+                    3D 뷰어를 불러오는 중...
+                  </p>
+                </div>
+              </div>
+            }
+          >
+            <ThreeViewer
+              detectedObject={result.detectedObject}
+              brailleText={result.brailleText}
+            />
+          </Suspense>
         </div>
       )}
 
