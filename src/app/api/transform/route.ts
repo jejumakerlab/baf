@@ -100,7 +100,7 @@ export async function POST(request: NextRequest) {
     const base64 = Buffer.from(bytes).toString("base64");
 
     const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
 
     const result = await model.generateContent([
       { text: GEMINI_PROMPT },
@@ -142,7 +142,11 @@ export async function POST(request: NextRequest) {
   } catch (err) {
     const message =
       err instanceof Error ? err.message : "서버 처리 중 오류가 발생했습니다.";
+    const stack = err instanceof Error ? err.stack : undefined;
     console.error("[BAF transform API error]", message);
+    if (stack) {
+      console.error("[BAF transform API stack]", stack);
+    }
     return NextResponse.json(
       { status: "error", message: `AI 분석 중 오류가 발생했습니다: ${message}` },
       { status: 500 }

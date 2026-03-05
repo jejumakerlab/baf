@@ -182,8 +182,8 @@ export default function ImageUploader() {
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              className="inline-flex w-full items-center justify-center gap-2.5 rounded-full px-7 py-3.5 text-[14px] font-bold text-white shadow-md shadow-blue-500/15 transition-all hover:shadow-lg hover:shadow-blue-500/20 sm:w-auto"
-              style={{ backgroundColor: "var(--accent)" }}
+              className="inline-flex w-full items-center justify-center gap-2.5 rounded-full px-7 py-3.5 text-[14px] font-bold shadow-md shadow-blue-500/15 transition-all hover:shadow-lg hover:shadow-blue-500/20 sm:w-auto"
+              style={{ backgroundColor: "var(--accent)", color: "var(--accent-text)" }}
               aria-label="기기에서 이미지 파일을 선택하여 업로드"
             >
               <FolderIcon />
@@ -300,8 +300,8 @@ export default function ImageUploader() {
                     {/* 번호 + 라벨 */}
                     <div className="flex items-center gap-4 sm:w-48">
                       <span
-                        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-bold text-white"
-                        style={{ backgroundColor: "var(--accent)" }}
+                        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-bold"
+                        style={{ backgroundColor: "var(--accent)", color: "var(--accent-text)" }}
                         aria-hidden="true"
                       >
                         {idx + 1}
@@ -350,8 +350,8 @@ export default function ImageUploader() {
             <button
               type="button"
               onClick={reset}
-              className="inline-flex w-full items-center justify-center gap-2 rounded-full px-7 py-3 text-[14px] font-bold text-white shadow-md shadow-blue-500/15 transition-all hover:shadow-lg sm:w-auto"
-              style={{ backgroundColor: "var(--accent)" }}
+              className="inline-flex w-full items-center justify-center gap-2 rounded-full px-7 py-3 text-[14px] font-bold shadow-md shadow-blue-500/15 transition-all hover:shadow-lg sm:w-auto"
+              style={{ backgroundColor: "var(--accent)", color: "var(--accent-text)" }}
               aria-label="다른 이미지를 업로드하기 위해 초기화"
             >
               <RefreshIcon />
@@ -410,8 +410,8 @@ export default function ImageUploader() {
           <button
             type="button"
             onClick={reset}
-            className="mt-8 inline-flex items-center gap-2 rounded-full px-7 py-3 text-[14px] font-bold text-white shadow-md transition-all hover:shadow-lg"
-            style={{ backgroundColor: "var(--accent)" }}
+            className="mt-8 inline-flex items-center gap-2 rounded-full px-7 py-3 text-[14px] font-bold shadow-md transition-all hover:shadow-lg"
+            style={{ backgroundColor: "var(--accent)", color: "var(--accent-text)" }}
             aria-label="오류를 닫고 이미지 업로드를 다시 시도"
           >
             <RefreshIcon />

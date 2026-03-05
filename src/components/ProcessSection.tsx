@@ -80,7 +80,7 @@ export default function ProcessSection() {
                 <div className="mb-6 flex items-center gap-4">
                   <div
                     className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl"
-                    style={{ backgroundColor: "var(--accent)" }}
+                    style={{ backgroundColor: "var(--accent)", color: "var(--accent-text)" }}
                     aria-hidden="true"
                   >
                     <step.icon />
@@ -126,7 +126,7 @@ function CameraIcon() {
       height="24"
       viewBox="0 0 24 24"
       fill="none"
-      stroke="white"
+      stroke="currentColor"
       strokeWidth="1.8"
       strokeLinecap="round"
       strokeLinejoin="round"
@@ -145,7 +145,7 @@ function AiIcon() {
       height="24"
       viewBox="0 0 24 24"
       fill="none"
-      stroke="white"
+      stroke="currentColor"
       strokeWidth="1.8"
       strokeLinecap="round"
       strokeLinejoin="round"
@@ -165,7 +165,7 @@ function CloudIcon() {
       height="24"
       viewBox="0 0 24 24"
       fill="none"
-      stroke="white"
+      stroke="currentColor"
       strokeWidth="1.8"
       strokeLinecap="round"
       strokeLinejoin="round"
@@ -183,7 +183,7 @@ function DeliveryIcon() {
       height="24"
       viewBox="0 0 24 24"
       fill="none"
-      stroke="white"
+      stroke="currentColor"
       strokeWidth="1.8"
       strokeLinecap="round"
       strokeLinejoin="round"

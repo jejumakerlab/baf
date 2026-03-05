@@ -67,8 +67,8 @@ export default function HeroSection() {
         <div className="mt-12 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
           <a
             href="#viewer"
-            className="inline-flex items-center gap-2.5 rounded-full px-8 py-4 text-[15px] font-bold text-white shadow-lg shadow-blue-500/25 transition-all hover:shadow-xl hover:shadow-blue-500/35 sm:text-base"
-            style={{ backgroundColor: "var(--accent)" }}
+            className="inline-flex items-center gap-2.5 rounded-full px-8 py-4 text-[15px] font-bold shadow-lg shadow-blue-500/25 transition-all hover:shadow-xl hover:shadow-blue-500/35 sm:text-base"
+            style={{ backgroundColor: "var(--accent)", color: "var(--accent-text)" }}
             role="button"
             aria-label="이미지를 업로드하여 3D 촉각 교구로 변환하기"
           >
