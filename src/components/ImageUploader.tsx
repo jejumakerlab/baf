@@ -4,17 +4,24 @@ import { useState, useRef, useCallback, lazy, Suspense, type DragEvent, type Cha
 
 const ThreeViewer = lazy(() => import("./ThreeViewer"));
 
-export interface TransformResult {
-  detectedObject: string;
-  brailleText: string;
-  modelUrl: string;
+interface BoundingBox {
+  ymin: number;
+  xmin: number;
+  ymax: number;
+  xmax: number;
+}
+
+interface DetectedObject {
+  label: string;
+  braille: string;
+  boundingBox: BoundingBox;
 }
 
 type UploaderStatus = "idle" | "loading" | "success" | "error";
 
 export default function ImageUploader() {
   const [status, setStatus] = useState<UploaderStatus>("idle");
-  const [result, setResult] = useState<TransformResult | null>(null);
+  const [objects, setObjects] = useState<DetectedObject[]>([]);
   const [errorMessage, setErrorMessage] = useState("");
   const [preview, setPreview] = useState<string | null>(null);
   const [fileName, setFileName] = useState("");
@@ -53,7 +60,7 @@ export default function ImageUploader() {
       }
 
       setFileName(file.name);
-      setResult(null);
+      setObjects([]);
       setErrorMessage("");
 
       const reader = new FileReader();
@@ -78,15 +85,12 @@ export default function ImageUploader() {
           throw new Error(data.message || "변환 중 오류가 발생했습니다.");
         }
 
-        setResult({
-          detectedObject: data.detectedObject,
-          brailleText: data.brailleText,
-          modelUrl: data.modelUrl,
-        });
+        const detected: DetectedObject[] = data.objects;
+        setObjects(detected);
         setStatus("success");
-        announce(
-          `변환 완료. 인식된 사물: ${data.detectedObject}. 점자 텍스트: ${data.brailleText}.`
-        );
+
+        const labels = detected.map((o) => o.label).join(", ");
+        announce(`변환 완료. ${detected.length}개 객체 인식: ${labels}.`);
       } catch (err) {
         const message = err instanceof Error ? err.message : "알 수 없는 오류가 발생했습니다.";
         setStatus("error");
@@ -128,7 +132,7 @@ export default function ImageUploader() {
 
   const reset = useCallback(() => {
     setStatus("idle");
-    setResult(null);
+    setObjects([]);
     setErrorMessage("");
     setPreview(null);
     setFileName("");
@@ -136,7 +140,7 @@ export default function ImageUploader() {
   }, [announce]);
 
   return (
-    <div className="mx-auto w-full max-w-2xl">
+    <div className="mx-auto w-full max-w-3xl">
       <div
         ref={announceRef}
         aria-live="polite"
@@ -145,7 +149,7 @@ export default function ImageUploader() {
         role="status"
       />
 
-      {/* ── Idle: 업로드 영역 ── */}
+      {/* ── Idle ── */}
       {status === "idle" && (
         <div
           onDrop={handleDrop}
@@ -167,16 +171,10 @@ export default function ImageUploader() {
             <UploadCloudIcon />
           </div>
 
-          <p
-            className="text-lg font-bold"
-            style={{ color: "var(--text-primary)" }}
-          >
+          <p className="text-lg font-bold" style={{ color: "var(--text-primary)" }}>
             이미지를 드래그하여 놓으세요
           </p>
-          <p
-            className="mt-2 text-sm"
-            style={{ color: "var(--text-muted)" }}
-          >
+          <p className="mt-2 text-sm" style={{ color: "var(--text-muted)" }}>
             JPEG, PNG, WebP, GIF 지원 (최대 10MB)
           </p>
 
@@ -208,65 +206,32 @@ export default function ImageUploader() {
             </button>
           </div>
 
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/jpeg,image/png,image/webp,image/gif"
-            onChange={handleFileChange}
-            className="hidden"
-            aria-hidden="true"
-            tabIndex={-1}
-          />
-
-          <input
-            ref={cameraInputRef}
-            type="file"
-            accept="image/*"
-            capture="environment"
-            onChange={handleFileChange}
-            className="hidden"
-            aria-hidden="true"
-            tabIndex={-1}
-          />
+          <input ref={fileInputRef} type="file" accept="image/jpeg,image/png,image/webp,image/gif" onChange={handleFileChange} className="hidden" aria-hidden="true" tabIndex={-1} />
+          <input ref={cameraInputRef} type="file" accept="image/*" capture="environment" onChange={handleFileChange} className="hidden" aria-hidden="true" tabIndex={-1} />
         </div>
       )}
 
-      {/* ── Loading: AI 분석 중 ── */}
+      {/* ── Loading ── */}
       {status === "loading" && (
         <div
           className="flex flex-col items-center rounded-2xl border p-10 shadow-sm sm:p-14"
-          style={{
-            borderColor: "var(--border-light)",
-            backgroundColor: "var(--bg-card)",
-          }}
+          style={{ borderColor: "var(--border-light)", backgroundColor: "var(--bg-card)" }}
           role="alert"
           aria-busy="true"
         >
           {preview && (
             <div className="mb-8 overflow-hidden rounded-2xl shadow-md">
-              <img
-                src={preview}
-                alt={`업로드된 이미지: ${fileName}`}
-                className="h-44 w-44 object-cover sm:h-52 sm:w-52"
-              />
+              <img src={preview} alt={`업로드된 이미지: ${fileName}`} className="h-44 w-44 object-cover sm:h-52 sm:w-52" />
             </div>
           )}
 
-          <div className="mb-5" aria-hidden="true">
-            <Spinner />
-          </div>
+          <div className="mb-5" aria-hidden="true"><Spinner /></div>
 
-          <p
-            className="text-center text-base font-bold sm:text-lg"
-            style={{ color: "var(--text-primary)" }}
-          >
+          <p className="text-center text-base font-bold sm:text-lg" style={{ color: "var(--text-primary)" }}>
             AI가 이미지를 분석 중입니다
           </p>
-          <p
-            className="mt-2 text-center text-sm"
-            style={{ color: "var(--text-muted)" }}
-          >
-            3D 촉각 데이터와 점자로 변환하고 있습니다...
+          <p className="mt-2 text-center text-sm" style={{ color: "var(--text-muted)" }}>
+            사물 인식, 좌표 추출, 점자 변환을 수행하고 있습니다...
           </p>
 
           <div
@@ -276,13 +241,7 @@ export default function ImageUploader() {
             aria-label="AI 변환 진행 중"
             aria-valuetext="변환 진행 중"
           >
-            <div
-              className="h-full rounded-full"
-              style={{
-                backgroundColor: "var(--accent)",
-                animation: "loading-bar 2s ease-in-out infinite",
-              }}
-            />
+            <div className="h-full rounded-full" style={{ backgroundColor: "var(--accent)", animation: "loading-bar 2s ease-in-out infinite" }} />
           </div>
 
           <style>{`
@@ -295,99 +254,99 @@ export default function ImageUploader() {
         </div>
       )}
 
-      {/* ── Success: 변환 결과 ── */}
-      {status === "success" && result && (
+      {/* ── Success ── */}
+      {status === "success" && objects.length > 0 && (
         <div
           className="overflow-hidden rounded-2xl border shadow-sm"
-          style={{
-            borderColor: "var(--border-light)",
-            backgroundColor: "var(--bg-card)",
-          }}
+          style={{ borderColor: "var(--border-light)", backgroundColor: "var(--bg-card)" }}
           role="region"
           aria-label="AI 변환 결과"
         >
-          <div className="flex flex-col items-center gap-8 p-8 sm:flex-row sm:items-start sm:p-10">
-            {preview && (
-              <div className="shrink-0 overflow-hidden rounded-2xl shadow-md">
-                <img
-                  src={preview}
-                  alt={`업로드된 원본 이미지: ${fileName}`}
-                  className="h-40 w-40 object-cover sm:h-48 sm:w-48"
-                />
+          {/* 상단: 이미지 + 요약 */}
+          <div className="p-8 sm:p-10">
+            <div className="flex flex-col items-center gap-8 sm:flex-row sm:items-start">
+              {preview && (
+                <div className="shrink-0 overflow-hidden rounded-2xl shadow-md">
+                  <img src={preview} alt={`업로드된 원본 이미지: ${fileName}`} className="h-44 w-44 object-cover sm:h-52 sm:w-52" />
+                </div>
+              )}
+
+              <div className="flex-1 text-center sm:text-left">
+                <div className="mb-4 inline-flex items-center gap-2 rounded-full px-3.5 py-1.5" style={{ backgroundColor: "var(--success-bg)" }}>
+                  <CheckCircleIcon />
+                  <span className="text-sm font-bold" style={{ color: "var(--success)" }}>
+                    {objects.length}개 객체 인식 완료
+                  </span>
+                </div>
+
+                <p className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+                  Gemini AI가 이미지에서 <strong style={{ color: "var(--text-primary)" }}>{objects.length}개의 사물</strong>을 인식했습니다.
+                  각 객체의 이름, 점자 텍스트, 위치 좌표를 아래에서 확인하세요.
+                </p>
               </div>
-            )}
-
-            <div className="flex-1 text-center sm:text-left">
-              <div
-                className="mb-5 inline-flex items-center gap-2 rounded-full px-3.5 py-1.5"
-                style={{ backgroundColor: "var(--success-bg)" }}
-              >
-                <CheckCircleIcon />
-                <span
-                  className="text-sm font-bold"
-                  style={{ color: "var(--success)" }}
-                >
-                  변환 완료
-                </span>
-              </div>
-
-              <dl className="space-y-5">
-                <div>
-                  <dt
-                    className="text-xs font-semibold uppercase tracking-widest"
-                    style={{ color: "var(--text-muted)" }}
-                  >
-                    인식된 사물
-                  </dt>
-                  <dd
-                    className="mt-1.5 text-3xl font-extrabold"
-                    style={{ color: "var(--text-primary)" }}
-                  >
-                    {result.detectedObject}
-                  </dd>
-                </div>
-
-                <div>
-                  <dt
-                    className="text-xs font-semibold uppercase tracking-widest"
-                    style={{ color: "var(--text-muted)" }}
-                  >
-                    점자 텍스트
-                  </dt>
-                  <dd
-                    className="mt-1.5 text-4xl tracking-widest"
-                    style={{ color: "var(--accent)" }}
-                    aria-label={`점자 텍스트: ${result.brailleText}`}
-                  >
-                    {result.brailleText}
-                  </dd>
-                </div>
-
-                <div>
-                  <dt
-                    className="text-xs font-semibold uppercase tracking-widest"
-                    style={{ color: "var(--text-muted)" }}
-                  >
-                    3D 모델 경로
-                  </dt>
-                  <dd
-                    className="mt-1.5 rounded-xl p-3 font-mono text-sm"
-                    style={{
-                      backgroundColor: "var(--bg-tertiary)",
-                      color: "var(--text-secondary)",
-                    }}
-                  >
-                    {result.modelUrl}
-                  </dd>
-                </div>
-              </dl>
             </div>
           </div>
 
-          <div
-            className="border-t px-8 py-5 sm:px-10"
-            style={{ borderColor: "var(--border-light)" }}
-          >
+          {/* 객체 리스트 */}
+          <div className="border-t" style={{ borderColor: "var(--border-light)" }}>
+            <ul role="list" aria-label="인식된 객체 목록">
+              {objects.map((obj, idx) => (
+                <li
+                  key={idx}
+                  className="border-b last:border-b-0"
+                  style={{ borderColor: "var(--border-light)" }}
+                >
+                  <div className="flex flex-col gap-4 px-8 py-6 sm:flex-row sm:items-center sm:px-10">
+                    {/* 번호 + 라벨 */}
+                    <div className="flex items-center gap-4 sm:w-48">
+                      <span
+                        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-bold text-white"
+                        style={{ backgroundColor: "var(--accent)" }}
+                        aria-hidden="true"
+                      >
+                        {idx + 1}
+                      </span>
+                      <div>
+                        <p className="text-lg font-extrabold" style={{ color: "var(--text-primary)" }}>
+                          {obj.label}
+                        </p>
+                        <p
+                          className="mt-0.5 text-xl tracking-widest"
+                          style={{ color: "var(--accent)" }}
+                          aria-label={`${obj.label}의 점자: ${obj.braille}`}
+                        >
+                          {obj.braille}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* 바운딩 박스 좌표 */}
+                    <div
+                      className="flex flex-1 flex-wrap gap-2 sm:justify-end"
+                      aria-label={`${obj.label}의 위치 좌표`}
+                    >
+                      {(["ymin", "xmin", "ymax", "xmax"] as const).map((key) => (
+                        <span
+                          key={key}
+                          className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 font-mono text-xs"
+                          style={{
+                            backgroundColor: "var(--bg-tertiary)",
+                            color: "var(--text-secondary)",
+                          }}
+                        >
+                          <span className="font-semibold" style={{ color: "var(--text-muted)" }}>{key}</span>
+                          {obj.boundingBox[key].toFixed(3)}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* 하단 액션 */}
+          <div className="border-t px-8 py-5 sm:px-10" style={{ borderColor: "var(--border-light)" }}>
             <button
               type="button"
               onClick={reset}
@@ -403,12 +362,9 @@ export default function ImageUploader() {
       )}
 
       {/* ── Success: 3D 뷰어 ── */}
-      {status === "success" && result && (
+      {status === "success" && objects.length > 0 && (
         <div className="mt-10">
-          <h3
-            className="mb-5 text-center text-lg font-bold sm:text-xl"
-            style={{ color: "var(--text-primary)" }}
-          >
+          <h3 className="mb-5 text-center text-lg font-bold sm:text-xl" style={{ color: "var(--text-primary)" }}>
             3D 촉각 교구 미리보기
           </h3>
           <Suspense
@@ -419,32 +375,25 @@ export default function ImageUploader() {
                 role="status"
               >
                 <div className="text-center">
-                  <div className="mb-3 flex justify-center" aria-hidden="true">
-                    <Spinner />
-                  </div>
-                  <p className="text-sm" style={{ color: "var(--text-muted)" }}>
-                    3D 뷰어를 불러오는 중...
-                  </p>
+                  <div className="mb-3 flex justify-center" aria-hidden="true"><Spinner /></div>
+                  <p className="text-sm" style={{ color: "var(--text-muted)" }}>3D 뷰어를 불러오는 중...</p>
                 </div>
               </div>
             }
           >
             <ThreeViewer
-              detectedObject={result.detectedObject}
-              brailleText={result.brailleText}
+              detectedObject={objects[0].label}
+              brailleText={objects[0].braille}
             />
           </Suspense>
         </div>
       )}
 
-      {/* ── Error: 오류 ── */}
+      {/* ── Error ── */}
       {status === "error" && (
         <div
           className="rounded-2xl border-2 p-10 text-center shadow-sm sm:p-14"
-          style={{
-            borderColor: "var(--error)",
-            backgroundColor: "var(--bg-card)",
-          }}
+          style={{ borderColor: "var(--error)", backgroundColor: "var(--bg-card)" }}
           role="alert"
         >
           <div
@@ -455,18 +404,8 @@ export default function ImageUploader() {
             <ErrorIcon />
           </div>
 
-          <p
-            className="text-lg font-bold"
-            style={{ color: "var(--error)" }}
-          >
-            변환에 실패했습니다
-          </p>
-          <p
-            className="mt-2 text-sm"
-            style={{ color: "var(--text-muted)" }}
-          >
-            {errorMessage}
-          </p>
+          <p className="text-lg font-bold" style={{ color: "var(--error)" }}>변환에 실패했습니다</p>
+          <p className="mt-2 text-sm" style={{ color: "var(--text-muted)" }}>{errorMessage}</p>
 
           <button
             type="button"
@@ -484,13 +423,12 @@ export default function ImageUploader() {
   );
 }
 
-/* ── 아이콘 컴포넌트 ── */
+/* ── 아이콘 ── */
 
 function UploadCloudIcon() {
   return (
     <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <polyline points="16 16 12 12 8 16" />
-      <line x1="12" y1="12" x2="12" y2="21" />
+      <polyline points="16 16 12 12 8 16" /><line x1="12" y1="12" x2="12" y2="21" />
       <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3" />
     </svg>
   );
@@ -525,8 +463,7 @@ function Spinner() {
 function CheckCircleIcon() {
   return (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--success)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-      <polyline points="22 4 12 14.01 9 11.01" />
+      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" />
     </svg>
   );
 }
@@ -534,9 +471,7 @@ function CheckCircleIcon() {
 function ErrorIcon() {
   return (
     <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--error)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <circle cx="12" cy="12" r="10" />
-      <line x1="15" y1="9" x2="9" y2="15" />
-      <line x1="9" y1="9" x2="15" y2="15" />
+      <circle cx="12" cy="12" r="10" /><line x1="15" y1="9" x2="9" y2="15" /><line x1="9" y1="9" x2="15" y2="15" />
     </svg>
   );
 }
@@ -544,8 +479,7 @@ function ErrorIcon() {
 function RefreshIcon() {
   return (
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <polyline points="23 4 23 10 17 10" />
-      <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
+      <polyline points="23 4 23 10 17 10" /><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
     </svg>
   );
 }

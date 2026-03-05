@@ -2,15 +2,32 @@ export default function HeroSection() {
   return (
     <section
       className="relative overflow-hidden px-5 py-28 sm:px-8 sm:py-36 lg:py-44"
-      style={{ backgroundColor: "var(--bg-secondary)" }}
       aria-labelledby="hero-heading"
     >
-      <div className="mx-auto max-w-4xl text-center">
+      {/* 배경 이미지 */}
+      <div
+        className="pointer-events-none absolute inset-0 bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: "url('/images/main.png')" }}
+        role="presentation"
+        aria-hidden="true"
+      />
+
+      {/* 오버레이: 텍스트 가독성 확보 */}
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "linear-gradient(to bottom, color-mix(in srgb, var(--bg-primary) 82%, transparent), color-mix(in srgb, var(--bg-primary) 95%, transparent))",
+        }}
+        aria-hidden="true"
+      />
+
+      <div className="relative mx-auto max-w-4xl text-center">
         <div
-          className="mx-auto mb-8 inline-flex items-center gap-2 rounded-full border px-4 py-1.5"
+          className="mx-auto mb-8 inline-flex items-center gap-2 rounded-full border px-4 py-1.5 backdrop-blur-sm"
           style={{
             borderColor: "var(--border)",
-            backgroundColor: "var(--bg-card)",
+            backgroundColor: "color-mix(in srgb, var(--bg-card) 80%, transparent)",
           }}
         >
           <span
@@ -59,11 +76,11 @@ export default function HeroSection() {
           </a>
           <a
             href="#process"
-            className="inline-flex items-center gap-2 rounded-full border px-7 py-4 text-[15px] font-semibold transition-all sm:text-base"
+            className="inline-flex items-center gap-2 rounded-full border px-7 py-4 text-[15px] font-semibold backdrop-blur-sm transition-all sm:text-base"
             style={{
               borderColor: "var(--border)",
               color: "var(--text-secondary)",
-              backgroundColor: "var(--bg-card)",
+              backgroundColor: "color-mix(in srgb, var(--bg-card) 80%, transparent)",
             }}
             aria-label="서비스 작동 방식 알아보기"
           >
@@ -80,15 +97,6 @@ export default function HeroSection() {
           별도의 회원가입 없이 바로 체험하실 수 있습니다.
         </p>
       </div>
-
-      <div
-        className="pointer-events-none absolute inset-0"
-        style={{
-          backgroundImage:
-            "radial-gradient(ellipse 60% 50% at 50% 0%, color-mix(in srgb, var(--accent) 6%, transparent) 0%, transparent 100%)",
-        }}
-        aria-hidden="true"
-      />
     </section>
   );
 }
