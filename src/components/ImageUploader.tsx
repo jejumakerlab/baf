@@ -1,21 +1,9 @@
 "use client";
 
 import { useState, useRef, useCallback, lazy, Suspense, type DragEvent, type ChangeEvent } from "react";
+import type { DetectedObject } from "@/types";
 
 const ThreeViewer = lazy(() => import("./ThreeViewer"));
-
-interface BoundingBox {
-  ymin: number;
-  xmin: number;
-  ymax: number;
-  xmax: number;
-}
-
-interface DetectedObject {
-  label: string;
-  braille: string;
-  boundingBox: BoundingBox;
-}
 
 type UploaderStatus = "idle" | "loading" | "success" | "error";
 
@@ -370,7 +358,7 @@ export default function ImageUploader() {
           <Suspense
             fallback={
               <div
-                className="flex h-[340px] items-center justify-center rounded-2xl border shadow-sm sm:h-[440px]"
+                className="flex h-[400px] items-center justify-center rounded-2xl border shadow-sm sm:h-[520px]"
                 style={{ borderColor: "var(--border-light)", backgroundColor: "var(--bg-card)" }}
                 role="status"
               >
@@ -382,8 +370,8 @@ export default function ImageUploader() {
             }
           >
             <ThreeViewer
-              detectedObject={objects[0].label}
-              brailleText={objects[0].braille}
+              imageUrl={preview!}
+              detectedObjects={objects}
             />
           </Suspense>
         </div>
