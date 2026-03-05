@@ -36,6 +36,21 @@
     --success-bg: #f0fdf4;
     --error: #dc2626;
     --error-bg: #fef2f2;
+
+    --hero-overlay: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.25) 0%,
+      rgba(0, 0, 0, 0.50) 50%,
+      rgba(0, 0, 0, 0.75) 100%
+    );
+    --hero-text: #ffffff;
+    --hero-text-sub: #e2e8f0;
+    --hero-text-muted: #cbd5e1;
+    --hero-badge-bg: rgba(0, 0, 0, 0.45);
+    --hero-badge-border: rgba(255, 255, 255, 0.2);
+    --hero-btn-secondary-bg: rgba(255, 255, 255, 0.12);
+    --hero-btn-secondary-border: rgba(255, 255, 255, 0.3);
+    --hero-btn-secondary-text: #ffffff;
   }
 
   .high-contrast {
@@ -56,6 +71,21 @@
     --success-bg: #003300;
     --error: #ff4444;
     --error-bg: #330000;
+
+    --hero-overlay: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.70) 0%,
+      rgba(0, 0, 0, 0.82) 50%,
+      rgba(0, 0, 0, 0.92) 100%
+    );
+    --hero-text: #ffffff;
+    --hero-text-sub: #ffff00;
+    --hero-text-muted: #cccccc;
+    --hero-badge-bg: rgba(0, 0, 0, 0.8);
+    --hero-badge-border: rgba(255, 255, 255, 0.5);
+    --hero-btn-secondary-bg: rgba(255, 255, 255, 0.1);
+    --hero-btn-secondary-border: rgba(255, 255, 255, 0.6);
+    --hero-btn-secondary-text: #ffffff;
   }
 
   * {
