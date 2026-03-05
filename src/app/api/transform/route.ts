@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenAI } from "@google/genai";
 
 interface BoundingBox {
   ymin: number;
@@ -99,23 +99,26 @@ export async function POST(request: NextRequest) {
     const bytes = await file.arrayBuffer();
     const base64 = Buffer.from(bytes).toString("base64");
 
-    const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
+    const ai = new GoogleGenAI({ apiKey });
 
-    const result = await model.generateContent([
-      { text: GEMINI_PROMPT },
-      {
-        inlineData: {
-          mimeType: file.type,
-          data: base64,
+    const response = await ai.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: [
+        {
+          role: "user",
+          parts: [
+            { text: GEMINI_PROMPT },
+            { inlineData: { mimeType: file.type, data: base64 } },
+          ],
         },
-      },
-    ]);
+      ],
+    });
 
-    const responseText = result.response.text().trim();
+    const responseText = (response.text ?? "").trim();
 
     const jsonMatch = responseText.match(/\[[\s\S]*\]/);
     if (!jsonMatch) {
+      console.error("[BAF] AI raw response:", responseText);
       return NextResponse.json(
         { status: "error", message: "AI 응답을 파싱할 수 없습니다." },
         { status: 500 }
