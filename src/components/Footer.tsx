@@ -1,24 +1,24 @@
 export default function Footer() {
   return (
     <footer
-      className="border-t px-4 py-12 sm:px-6"
+      className="border-t px-5 py-16 sm:px-8"
       style={{
         backgroundColor: "var(--bg-primary)",
-        borderColor: "var(--border)",
+        borderColor: "var(--border-light)",
       }}
       role="contentinfo"
     >
       <div className="mx-auto max-w-6xl">
-        <div className="flex flex-col items-center gap-6 sm:flex-row sm:justify-between">
-          <div>
+        <div className="flex flex-col items-center gap-8 sm:flex-row sm:justify-between">
+          <div className="text-center sm:text-left">
             <p
-              className="text-lg font-extrabold"
+              className="text-xl font-extrabold tracking-tight"
               style={{ color: "var(--accent)" }}
             >
               BAF
             </p>
             <p
-              className="mt-1 text-sm"
+              className="mt-1.5 text-sm"
               style={{ color: "var(--text-muted)" }}
             >
               Barrier-free AI Factory
@@ -26,11 +26,11 @@ export default function Footer() {
           </div>
 
           <nav aria-label="푸터 내비게이션">
-            <ul className="flex gap-6" role="list">
+            <ul className="flex gap-8" role="list">
               <li>
                 <a
                   href="#process"
-                  className="text-sm transition-colors hover:opacity-80"
+                  className="text-sm font-medium transition-colors"
                   style={{ color: "var(--text-muted)" }}
                 >
                   서비스 소개
@@ -39,7 +39,7 @@ export default function Footer() {
               <li>
                 <a
                   href="#viewer"
-                  className="text-sm transition-colors hover:opacity-80"
+                  className="text-sm font-medium transition-colors"
                   style={{ color: "var(--text-muted)" }}
                 >
                   3D 변환
@@ -48,7 +48,7 @@ export default function Footer() {
               <li>
                 <a
                   href="#partnership"
-                  className="text-sm transition-colors hover:opacity-80"
+                  className="text-sm font-medium transition-colors"
                   style={{ color: "var(--text-muted)" }}
                 >
                   제휴 안내
@@ -59,9 +59,9 @@ export default function Footer() {
         </div>
 
         <div
-          className="mt-8 border-t pt-8 text-center text-sm"
+          className="mt-10 border-t pt-8 text-center text-sm"
           style={{
-            borderColor: "var(--border)",
+            borderColor: "var(--border-light)",
             color: "var(--text-muted)",
           }}
         >

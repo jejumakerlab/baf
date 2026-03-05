@@ -19,8 +19,8 @@ export default function ThreeViewer({
       role="img"
       aria-label={`${detectedObject}의 3D 촉각 교구 모델 미리보기. 마우스 드래그 또는 터치로 회전할 수 있습니다.`}
     >
-      <div className="overflow-hidden rounded-2xl border" style={{ borderColor: "var(--border)" }}>
-        <div className="h-[320px] w-full sm:h-[420px]">
+      <div className="overflow-hidden rounded-2xl border shadow-sm" style={{ borderColor: "var(--border-light)" }}>
+        <div className="h-[340px] w-full sm:h-[440px]">
           <Canvas
             camera={{ position: [3, 2.5, 3], fov: 45 }}
             gl={{ antialias: true }}
@@ -41,16 +41,16 @@ export default function ThreeViewer({
         </div>
 
         <div
-          className="flex items-center justify-between gap-4 border-t px-5 py-3"
-          style={{ borderColor: "var(--border)", backgroundColor: "var(--bg-card)" }}
+          className="flex items-center justify-between gap-4 border-t px-6 py-4"
+          style={{ borderColor: "var(--border-light)", backgroundColor: "var(--bg-card)" }}
         >
           <p className="text-xs sm:text-sm" style={{ color: "var(--text-muted)" }}>
             마우스나 터치로 모델을 이리저리 돌려보세요.
           </p>
-          <div className="flex shrink-0 items-center gap-2">
+          <div className="flex shrink-0 items-center gap-3">
             <span
-              className="rounded-md px-2 py-1 font-mono text-xs font-bold"
-              style={{ backgroundColor: "var(--bg-secondary)", color: "var(--text-primary)" }}
+              className="rounded-full px-3 py-1 text-xs font-bold"
+              style={{ backgroundColor: "var(--accent-subtle)", color: "var(--accent)" }}
             >
               {detectedObject}
             </span>

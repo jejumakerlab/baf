@@ -1,6 +1,9 @@
 @import "tailwindcss";
 
 @theme {
+  --font-sans: var(--font-noto-sans-kr), "Pretendard", -apple-system,
+    BlinkMacSystemFont, system-ui, "Segoe UI", Roboto, sans-serif;
+
   --color-navy-50: #f0f4fa;
   --color-navy-100: #d9e2f0;
   --color-navy-200: #b3c5e1;
@@ -18,27 +21,41 @@
   :root {
     --bg-primary: #ffffff;
     --bg-secondary: #f8fafc;
+    --bg-tertiary: #f1f5f9;
     --bg-card: #ffffff;
-    --text-primary: #0f1d3a;
-    --text-secondary: #3a5a8a;
-    --text-muted: #64748b;
-    --accent: #3a5a8a;
-    --accent-hover: #2a4470;
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #94a3b8;
+    --accent: #2563eb;
+    --accent-hover: #1d4ed8;
+    --accent-subtle: #eff6ff;
     --border: #e2e8f0;
-    --focus-ring: #4a6fa5;
+    --border-light: #f1f5f9;
+    --focus-ring: #2563eb;
+    --success: #16a34a;
+    --success-bg: #f0fdf4;
+    --error: #dc2626;
+    --error-bg: #fef2f2;
   }
 
   .high-contrast {
     --bg-primary: #000000;
     --bg-secondary: #1a1a1a;
+    --bg-tertiary: #222222;
     --bg-card: #111111;
     --text-primary: #ffffff;
     --text-secondary: #ffff00;
     --text-muted: #cccccc;
     --accent: #ffff00;
     --accent-hover: #ffdd00;
+    --accent-subtle: #333300;
     --border: #ffffff;
+    --border-light: #444444;
     --focus-ring: #ffff00;
+    --success: #00ff00;
+    --success-bg: #003300;
+    --error: #ff4444;
+    --error-bg: #330000;
   }
 
   * {
@@ -54,7 +71,7 @@
   *:focus-visible {
     outline: 3px solid var(--focus-ring);
     outline-offset: 2px;
-    border-radius: 2px;
+    border-radius: 4px;
   }
 }
 
@@ -67,7 +84,7 @@
   background-color: var(--accent);
   color: #ffffff;
   font-weight: 700;
-  border-radius: 0 0 8px 8px;
+  border-radius: 0 0 12px 12px;
   transition: top 0.2s ease;
 }
 

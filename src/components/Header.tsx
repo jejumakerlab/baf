@@ -25,24 +25,31 @@ export default function Header({
 
   return (
     <header
-      className="sticky top-0 z-50 border-b"
+      className="sticky top-0 z-50 border-b backdrop-blur-md"
       style={{
-        backgroundColor: "var(--bg-primary)",
-        borderColor: "var(--border)",
+        backgroundColor: "color-mix(in srgb, var(--bg-primary) 85%, transparent)",
+        borderColor: "var(--border-light)",
       }}
       role="banner"
     >
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 sm:px-8 lg:px-10">
         <a
           href="#"
-          className="text-xl font-extrabold tracking-tight sm:text-2xl"
-          style={{ color: "var(--accent)" }}
+          className="flex items-center gap-2.5"
           aria-label="BAF 홈으로 이동"
         >
-          BAF
           <span
-            className="ml-2 hidden text-xs font-normal sm:inline"
-            style={{ color: "var(--text-muted)" }}
+            className="text-xl font-extrabold tracking-tight sm:text-2xl"
+            style={{ color: "var(--accent)" }}
+          >
+            BAF
+          </span>
+          <span
+            className="hidden rounded-full px-2.5 py-0.5 text-[11px] font-semibold tracking-wide sm:inline"
+            style={{
+              backgroundColor: "var(--accent-subtle)",
+              color: "var(--accent)",
+            }}
           >
             Barrier-free AI Factory
           </span>
@@ -56,19 +63,41 @@ export default function Header({
             <a
               key={item.href}
               href={item.href}
-              className="rounded-lg px-4 py-2 text-sm font-medium transition-colors hover:opacity-80"
-              style={{ color: "var(--text-primary)" }}
+              className="rounded-full px-5 py-2 text-[14px] font-medium transition-colors"
+              style={{ color: "var(--text-secondary)" }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = "var(--bg-tertiary)";
+                e.currentTarget.style.color = "var(--text-primary)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = "transparent";
+                e.currentTarget.style.color = "var(--text-secondary)";
+              }}
             >
               {item.label}
             </a>
           ))}
 
+          <div
+            className="mx-3 h-5 w-px"
+            style={{ backgroundColor: "var(--border)" }}
+            aria-hidden="true"
+          />
+
           <button
             onClick={onToggleContrast}
-            className="ml-4 flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition-colors hover:opacity-80"
+            className="flex items-center gap-2 rounded-full border px-4 py-2 text-[13px] font-medium transition-all"
             style={{
               borderColor: "var(--border)",
-              color: "var(--text-primary)",
+              color: "var(--text-secondary)",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = "var(--accent)";
+              e.currentTarget.style.color = "var(--accent)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = "var(--border)";
+              e.currentTarget.style.color = "var(--text-secondary)";
             }}
             aria-label={
               highContrast
@@ -85,7 +114,7 @@ export default function Header({
         </nav>
 
         <button
-          className="rounded-lg p-2 md:hidden"
+          className="rounded-xl p-2 transition-colors md:hidden"
           style={{ color: "var(--text-primary)" }}
           onClick={toggleMenu}
           aria-expanded={mobileMenuOpen}
@@ -99,8 +128,8 @@ export default function Header({
       {mobileMenuOpen && (
         <nav
           id="mobile-menu"
-          className="border-t px-4 pb-4 pt-2 md:hidden"
-          style={{ borderColor: "var(--border)" }}
+          className="border-t px-5 pb-5 pt-3 md:hidden"
+          style={{ borderColor: "var(--border-light)" }}
           aria-label="모바일 내비게이션"
         >
           <ul className="flex flex-col gap-1" role="list">
@@ -108,7 +137,7 @@ export default function Header({
               <li key={item.href}>
                 <a
                   href={item.href}
-                  className="block rounded-lg px-4 py-3 text-sm font-medium transition-colors hover:opacity-80"
+                  className="block rounded-2xl px-4 py-3.5 text-[15px] font-medium transition-colors"
                   style={{ color: "var(--text-primary)" }}
                   onClick={() => setMobileMenuOpen(false)}
                 >
@@ -122,7 +151,7 @@ export default function Header({
                   onToggleContrast();
                   setMobileMenuOpen(false);
                 }}
-                className="flex w-full items-center gap-2 rounded-lg px-4 py-3 text-sm font-medium transition-colors hover:opacity-80"
+                className="flex w-full items-center gap-2.5 rounded-2xl px-4 py-3.5 text-[15px] font-medium transition-colors"
                 style={{ color: "var(--text-primary)" }}
                 aria-label={
                   highContrast
@@ -145,8 +174,8 @@ export default function Header({
 function ContrastIcon() {
   return (
     <svg
-      width="20"
-      height="20"
+      width="18"
+      height="18"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"

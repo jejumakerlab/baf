@@ -33,21 +33,31 @@ export default function ProcessSection() {
   return (
     <section
       id="process"
-      className="px-4 py-20 sm:px-6 sm:py-28"
+      className="px-5 py-28 sm:px-8 sm:py-36"
       style={{ backgroundColor: "var(--bg-primary)" }}
       aria-labelledby="process-heading"
     >
       <div className="mx-auto max-w-6xl">
         <div className="text-center">
+          <span
+            className="inline-block rounded-full px-4 py-1.5 text-xs font-bold uppercase tracking-widest"
+            style={{
+              backgroundColor: "var(--accent-subtle)",
+              color: "var(--accent)",
+            }}
+          >
+            How it works
+          </span>
+
           <h2
             id="process-heading"
-            className="text-2xl font-extrabold tracking-tight sm:text-3xl md:text-4xl"
+            className="mt-5 text-3xl font-extrabold tracking-tight sm:text-4xl md:text-5xl"
             style={{ color: "var(--text-primary)" }}
           >
             어떻게 작동하나요?
           </h2>
           <p
-            className="mx-auto mt-4 max-w-xl text-base sm:text-lg"
+            className="mx-auto mt-5 max-w-lg text-base sm:text-lg"
             style={{ color: "var(--text-secondary)" }}
           >
             이미지 한 장으로 촉각 교구가 완성되기까지, 단 4단계면 됩니다.
@@ -55,38 +65,37 @@ export default function ProcessSection() {
         </div>
 
         <ol
-          className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-4"
+          className="mt-20 grid gap-6 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8"
           aria-label="3D 촉각 교구 변환 과정 4단계"
         >
           {steps.map((step) => (
             <li key={step.number} className="group relative">
               <div
-                className="flex h-full flex-col rounded-2xl border p-6 transition-shadow hover:shadow-lg sm:p-8"
+                className="flex h-full flex-col rounded-2xl border p-7 shadow-sm transition-all hover:shadow-md sm:p-8"
                 style={{
                   backgroundColor: "var(--bg-card)",
-                  borderColor: "var(--border)",
+                  borderColor: "var(--border-light)",
                 }}
               >
-                <div
-                  className="mb-5 flex h-14 w-14 items-center justify-center rounded-xl"
-                  style={{
-                    backgroundColor: "var(--accent)",
-                  }}
-                  aria-hidden="true"
-                >
-                  <step.icon />
+                <div className="mb-6 flex items-center gap-4">
+                  <div
+                    className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl"
+                    style={{ backgroundColor: "var(--accent)" }}
+                    aria-hidden="true"
+                  >
+                    <step.icon />
+                  </div>
+                  <span
+                    className="text-[13px] font-bold uppercase tracking-widest"
+                    style={{ color: "var(--text-muted)" }}
+                    aria-hidden="true"
+                  >
+                    Step {step.number}
+                  </span>
                 </div>
 
-                <span
-                  className="mb-2 text-sm font-bold uppercase tracking-wider"
-                  style={{ color: "var(--accent)" }}
-                  aria-hidden="true"
-                >
-                  Step {step.number}
-                </span>
-
                 <h3
-                  className="mb-3 text-lg font-bold"
+                  className="mb-3 text-[17px] font-bold leading-snug"
                   style={{ color: "var(--text-primary)" }}
                 >
                   <span className="sr-only">
@@ -96,8 +105,8 @@ export default function ProcessSection() {
                 </h3>
 
                 <p
-                  className="text-sm leading-relaxed"
-                  style={{ color: "var(--text-muted)" }}
+                  className="text-[14px] leading-relaxed"
+                  style={{ color: "var(--text-secondary)" }}
                 >
                   {step.description}
                 </p>
@@ -113,12 +122,12 @@ export default function ProcessSection() {
 function CameraIcon() {
   return (
     <svg
-      width="28"
-      height="28"
+      width="24"
+      height="24"
       viewBox="0 0 24 24"
       fill="none"
       stroke="white"
-      strokeWidth="2"
+      strokeWidth="1.8"
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden="true"
@@ -132,12 +141,12 @@ function CameraIcon() {
 function AiIcon() {
   return (
     <svg
-      width="28"
-      height="28"
+      width="24"
+      height="24"
       viewBox="0 0 24 24"
       fill="none"
       stroke="white"
-      strokeWidth="2"
+      strokeWidth="1.8"
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden="true"
@@ -152,12 +161,12 @@ function AiIcon() {
 function CloudIcon() {
   return (
     <svg
-      width="28"
-      height="28"
+      width="24"
+      height="24"
       viewBox="0 0 24 24"
       fill="none"
       stroke="white"
-      strokeWidth="2"
+      strokeWidth="1.8"
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden="true"
@@ -170,12 +179,12 @@ function CloudIcon() {
 function DeliveryIcon() {
   return (
     <svg
-      width="28"
-      height="28"
+      width="24"
+      height="24"
       viewBox="0 0 24 24"
       fill="none"
       stroke="white"
-      strokeWidth="2"
+      strokeWidth="1.8"
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden="true"
